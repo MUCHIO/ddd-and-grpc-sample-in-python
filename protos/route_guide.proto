@@ -27,7 +27,7 @@ service RouteGuide {
   //
   // Obtains the feature at a given position.
   //
-  // A feature with an empty name is returned if there's no feature at the given
+  // A feature with an empty name is returned if there is no feature at the given
   // position.
   rpc GetFeature(Point) returns (Feature) {}
 
