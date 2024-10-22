@@ -1,6 +1,6 @@
 # ddd-and-grpc-sample-in-python
 
-## Those files are lisenced on Apache-2.0
+## Those files are licensed on Apache-2.0
 auth_sample.proto  
 hellostreamingworld.proto  
 helloworld.proto  
