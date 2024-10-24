@@ -3,3 +3,5 @@ grpcio-tools
 sqlalchemy
 alembic
 mysqlclient
+pydantic
+pydantic-settings
