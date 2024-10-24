@@ -4,7 +4,7 @@ import grpc
 import warnings
 
 # import route_guide_pb2 as route__guide__pb2
-from auto_generated.grpc import route_guide_pb2 as route__guide__pb2
+from src.auto_generated.grpc import route_guide_pb2 as route__guide__pb2
 
 GRPC_GENERATED_VERSION = '1.67.0'
 GRPC_VERSION = grpc.__version__

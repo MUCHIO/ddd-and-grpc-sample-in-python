@@ -19,7 +19,7 @@
 
 import json
 
-from auto_generated.grpc import route_guide_pb2
+from src.auto_generated.grpc import route_guide_pb2
 
 
 def read_route_guide_database():
@@ -30,7 +30,7 @@ def read_route_guide_database():
         route_guide_pb2.Features.
     """
     feature_list = []
-    with open("infrastructure/database/data/route_guide_db.json") as route_guide_db_file:
+    with open("src/infrastructure/database/data/route_guide_db.json") as route_guide_db_file:
         for item in json.load(route_guide_db_file):
             feature = route_guide_pb2.Feature(
                 name=item["name"],

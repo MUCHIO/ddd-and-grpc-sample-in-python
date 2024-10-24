@@ -2,8 +2,7 @@
 
 Start up the server
 ```
-cd src
-python -m presentation.grpc.handler.route_guide_server 
+python -m src.presentation.grpc.handler.route_guide_server
 ```
 
 ## Those files are licensed on Apache-2.0

@@ -25,9 +25,9 @@ import time
 import grpc
 # import sys
 # sys.path.append('/Users/hn/Documents/dev/workspace_github/ddd-and-grpc-sample-in-python/src')
-from auto_generated.grpc import route_guide_pb2
-from auto_generated.grpc import route_guide_pb2_grpc
-from infrastructure.database.repositories import route_guide_resources
+from src.auto_generated.grpc import route_guide_pb2
+from src.auto_generated.grpc import route_guide_pb2_grpc
+from src.infrastructure.database.repositories import route_guide_resources
 
 
 def get_feature(feature_db, point):
