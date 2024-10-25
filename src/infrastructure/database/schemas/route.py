@@ -1,7 +1,7 @@
 from typing import List
 from typing import Optional
 from sqlalchemy import ForeignKey
-from sqlalchemy import String, Integer, Float, DateTime
+from sqlalchemy import String, Integer, DateTime
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -22,7 +22,7 @@ class Base(DeclarativeBase):
 class Route(Base):
     __tablename__ = "route"
     name: Mapped[str] = mapped_column(String(300))
-    latitude: Mapped[float] = mapped_column(Float(10))
-    longitude: Mapped[float] = mapped_column(Float(10))
+    latitude: Mapped[int] = mapped_column(Integer())
+    longitude: Mapped[int] = mapped_column(Integer())
     def __repr__(self) -> str:
         return f"Route(id={self.id!r}, name={self.name!r}, latitude={self.latitude!r}, longitude={self.longitude!r})"
