@@ -14,6 +14,8 @@
 
 # Modified by MUCHIO on 2024-10-22
 # Changes: Modified imported source package
+# Modified by MUCHIO on 2024-10-31
+# Changes: Replace DB from json to mysql
 
 """The Python implementation of the gRPC route guide server."""
 
@@ -21,6 +23,7 @@ from concurrent import futures
 import logging
 import math
 import time
+import json
 
 import grpc
 # import sys
@@ -28,13 +31,16 @@ import grpc
 from src.auto_generated.grpc import route_guide_pb2
 from src.auto_generated.grpc import route_guide_pb2_grpc
 from src.infrastructure.database.repositories import route_guide_resources
+from src.infrastructure.database.schemas.route import Route
+from src.infrastructure.database import Session
+from src.infrastructure.database.repositories.route_repository import RouteRepository
+import pdb
 
-
-def get_feature(feature_db, point):
+def get_feature(route_repository, point):
     """Returns Feature at given location or None."""
-    for feature in feature_db:
-        if feature.location == point:
-            return feature
+    for route in route_repository.list_routes():
+        if route.latitude == point.latitude and route.longitude == point.longitude:
+            return route
     return None
 
 
@@ -66,28 +72,42 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
     """Provides methods that implement functionality of route guide server."""
 
     def __init__(self):
-        self.db = route_guide_resources.read_route_guide_database()
+        # self.route_repository = route_guide_resources.read_route_guide_database()
+        self.route_repository = RouteRepository(Session())
 
     def GetFeature(self, request, context):
-        feature = get_feature(self.db, request)
+        feature = get_feature(self.route_repository, request)
         if feature is None:
             return route_guide_pb2.Feature(name="", location=request)
         else:
-            return feature
+            # pdb.set_trace()
+            return route_guide_pb2.Feature(
+                        name=feature.name,
+                        location=route_guide_pb2.Point(
+                            latitude=feature.latitude,
+                            longitude=feature.longitude,
+                        ),
+                    )
 
     def ListFeatures(self, request, context):
         left = min(request.lo.longitude, request.hi.longitude)
         right = max(request.lo.longitude, request.hi.longitude)
         top = max(request.lo.latitude, request.hi.latitude)
         bottom = min(request.lo.latitude, request.hi.latitude)
-        for feature in self.db:
+        for feature in self.route_repository.list_routes():
             if (
-                feature.location.longitude >= left
-                and feature.location.longitude <= right
-                and feature.location.latitude >= bottom
-                and feature.location.latitude <= top
+                feature.longitude >= left
+                and feature.longitude <= right
+                and feature.latitude >= bottom
+                and feature.latitude <= top
             ):
-                yield feature
+                yield route_guide_pb2.Feature(
+                        name=feature.name,
+                        location=route_guide_pb2.Point(
+                            latitude=feature.latitude,
+                            longitude=feature.longitude,
+                        ),
+                    )
 
     def RecordRoute(self, request_iterator, context):
         point_count = 0
@@ -98,7 +118,7 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
         start_time = time.time()
         for point in request_iterator:
             point_count += 1
-            if get_feature(self.db, point):
+            if get_feature(self.route_repository, point):
                 feature_count += 1
             if prev_point:
                 distance += get_distance(prev_point, point)
