@@ -16,26 +16,24 @@
 # Changes: Modified imported source package
 # Modified by MUCHIO on 2024-10-31
 # Changes: Replace DB from json to mysql
+# Modified by MUCHIO on 2024-11-01
+# Changes: Export some codes into src/application/services/route_summarize_application_service.py
 
 """The Python implementation of the gRPC route guide server."""
 
 from concurrent import futures
 import logging
-import math
-import time
-import json
 
 import grpc
 # import sys
 # sys.path.append('/Users/hn/Documents/dev/workspace_github/ddd-and-grpc-sample-in-python/src')
 from src.presentation.grpc.serializers.feature_serializer import FeatureSerializer
+from src.presentation.grpc.serializers.route_summary_serializer import RouteSummarySerializer
 from src.auto_generated.grpc import route_guide_pb2
 from src.auto_generated.grpc import route_guide_pb2_grpc
-from src.infrastructure.database.repositories import route_guide_resources
-from src.infrastructure.database.schemas.route import Route
 from src.infrastructure.database import Session
 from src.infrastructure.database.repositories.route_repository import RouteRepository
-import pdb
+from src.application.services.route_summary_application_service import RouteSummaryApplicationService
 
 def get_feature(route_repository, point):
     """Returns Feature at given location or None."""
@@ -44,47 +42,19 @@ def get_feature(route_repository, point):
             return route
     return None
 
-
-def get_distance(start, end):
-    """Distance between two points."""
-    coord_factor = 10000000.0
-    lat_1 = start.latitude / coord_factor
-    lat_2 = end.latitude / coord_factor
-    lon_1 = start.longitude / coord_factor
-    lon_2 = end.longitude / coord_factor
-    lat_rad_1 = math.radians(lat_1)
-    lat_rad_2 = math.radians(lat_2)
-    delta_lat_rad = math.radians(lat_2 - lat_1)
-    delta_lon_rad = math.radians(lon_2 - lon_1)
-
-    # Formula is based on http://mathforum.org/library/drmath/view/51879.html
-    a = pow(math.sin(delta_lat_rad / 2), 2) + (
-        math.cos(lat_rad_1)
-        * math.cos(lat_rad_2)
-        * pow(math.sin(delta_lon_rad / 2), 2)
-    )
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    R = 6371000
-    # metres
-    return R * c
-
-
 class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
     """Provides methods that implement functionality of route guide server."""
 
-    def __init__(self):
-        # self.route_repository = route_guide_resources.read_route_guide_database()
-        self.route_repository = RouteRepository(Session())
-
     def GetFeature(self, request, context):
+        self.route_repository = RouteRepository(Session())
         feature = get_feature(self.route_repository, request)
         if feature is None:
             return route_guide_pb2.Feature(name="", location=request)
         else:
-            # pdb.set_trace()
             return FeatureSerializer.to_proto(feature)
 
     def ListFeatures(self, request, context):
+        self.route_repository = RouteRepository(Session())
         left = min(request.lo.longitude, request.hi.longitude)
         right = max(request.lo.longitude, request.hi.longitude)
         top = max(request.lo.latitude, request.hi.latitude)
@@ -99,29 +69,11 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
                 yield FeatureSerializer.to_proto(feature)
 
     def RecordRoute(self, request_iterator, context):
-        point_count = 0
-        feature_count = 0
-        distance = 0.0
-        prev_point = None
-
-        start_time = time.time()
-        for point in request_iterator:
-            point_count += 1
-            if get_feature(self.route_repository, point):
-                feature_count += 1
-            if prev_point:
-                distance += get_distance(prev_point, point)
-            prev_point = point
-
-        elapsed_time = time.time() - start_time
-        return route_guide_pb2.RouteSummary(
-            point_count=point_count,
-            feature_count=feature_count,
-            distance=int(distance),
-            elapsed_time=int(elapsed_time),
-        )
+        route_summary = RouteSummaryApplicationService().summarize_route(request_iterator)
+        return RouteSummarySerializer().to_proto(route_summary)
 
     def RouteChat(self, request_iterator, context):
+        self.route_repository = RouteRepository(Session())
         prev_notes = []
         for new_note in request_iterator:
             for prev_note in prev_notes:
