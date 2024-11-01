@@ -28,6 +28,7 @@ import json
 import grpc
 # import sys
 # sys.path.append('/Users/hn/Documents/dev/workspace_github/ddd-and-grpc-sample-in-python/src')
+from src.presentation.grpc.serializers.feature_serializer import FeatureSerializer
 from src.auto_generated.grpc import route_guide_pb2
 from src.auto_generated.grpc import route_guide_pb2_grpc
 from src.infrastructure.database.repositories import route_guide_resources
@@ -81,13 +82,7 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
             return route_guide_pb2.Feature(name="", location=request)
         else:
             # pdb.set_trace()
-            return route_guide_pb2.Feature(
-                        name=feature.name,
-                        location=route_guide_pb2.Point(
-                            latitude=feature.latitude,
-                            longitude=feature.longitude,
-                        ),
-                    )
+            return FeatureSerializer.to_proto(feature)
 
     def ListFeatures(self, request, context):
         left = min(request.lo.longitude, request.hi.longitude)
@@ -101,13 +96,7 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
                 and feature.latitude >= bottom
                 and feature.latitude <= top
             ):
-                yield route_guide_pb2.Feature(
-                        name=feature.name,
-                        location=route_guide_pb2.Point(
-                            latitude=feature.latitude,
-                            longitude=feature.longitude,
-                        ),
-                    )
+                yield FeatureSerializer.to_proto(feature)
 
     def RecordRoute(self, request_iterator, context):
         point_count = 0
