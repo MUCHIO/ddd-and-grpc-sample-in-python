@@ -18,6 +18,8 @@
 # Changes: Replace DB from json to mysql
 # Modified by MUCHIO on 2024-11-01
 # Changes: Export some codes into src/application/services/route_summarize_application_service.py
+# Changes: Implement Application Service
+
 
 """The Python implementation of the gRPC route guide server."""
 
@@ -34,39 +36,25 @@ from src.auto_generated.grpc import route_guide_pb2_grpc
 from src.infrastructure.database import Session
 from src.infrastructure.database.repositories.route_repository import RouteRepository
 from src.application.services.route_summary_application_service import RouteSummaryApplicationService
-
-def get_feature(route_repository, point):
-    """Returns Feature at given location or None."""
-    for route in route_repository.list_routes():
-        if route.latitude == point.latitude and route.longitude == point.longitude:
-            return route
-    return None
+from src.application.services.feature_application_service import FeatureApplicationService
 
 class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
     """Provides methods that implement functionality of route guide server."""
 
     def GetFeature(self, request, context):
-        self.route_repository = RouteRepository(Session())
-        feature = get_feature(self.route_repository, request)
+        feature = FeatureApplicationService().find_feature_by_point(request.latitude, request.longitude)
         if feature is None:
             return route_guide_pb2.Feature(name="", location=request)
         else:
             return FeatureSerializer.to_proto(feature)
 
     def ListFeatures(self, request, context):
-        self.route_repository = RouteRepository(Session())
         left = min(request.lo.longitude, request.hi.longitude)
         right = max(request.lo.longitude, request.hi.longitude)
         top = max(request.lo.latitude, request.hi.latitude)
         bottom = min(request.lo.latitude, request.hi.latitude)
-        for feature in self.route_repository.list_routes():
-            if (
-                feature.longitude >= left
-                and feature.longitude <= right
-                and feature.latitude >= bottom
-                and feature.latitude <= top
-            ):
-                yield FeatureSerializer.to_proto(feature)
+        for feature in FeatureApplicationService().find_feature_in_rectangle(left, right, top, bottom):
+            yield FeatureSerializer().to_proto(feature)
 
     def RecordRoute(self, request_iterator, context):
         route_summary = RouteSummaryApplicationService().summarize_route(request_iterator)

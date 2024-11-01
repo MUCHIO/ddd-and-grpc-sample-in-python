@@ -16,8 +16,14 @@ class RouteRepository(IRouteRepository):
         self.session.refresh(db_route)
         return RouteModel.from_orm(db_route)
 
-    def get_route(self, route_id: int) -> Optional[RouteModel]:
+    def find_route(self, route_id: int) -> Optional[RouteModel]:
         db_route = self.session.query(Route).filter(Route.id == route_id).first()
+        if db_route:
+            return RouteModel.from_orm(db_route)
+        return None
+
+    def find_route_by_point(self, latitude: int, longitude: int) -> RouteModel | None:
+        db_route = self.session.query(Route).filter(Route.latitude == latitude, Route.longitude == longitude).first()
         if db_route:
             return RouteModel.from_orm(db_route)
         return None
