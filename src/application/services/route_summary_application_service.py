@@ -35,7 +35,7 @@ class RouteSummaryApplicationService:
         start_time = time.time()
         for point in request_iterator:
             point_count += 1
-            if self.get_feature(self.route_repository, point):
+            if self.route_repository.find_route_by_point(point.latitude, point.longitude):
                 feature_count += 1
             if prev_point:
                 distance += self.get_distance(prev_point, point)
@@ -48,14 +48,6 @@ class RouteSummaryApplicationService:
             distance=int(distance),
             elapsed_time=int(elapsed_time),
         )
-
-    # Duplicate code from src/presentation/grpc/handler/route_guide_server.py
-    def get_feature(self, route_repository, point):
-        """Returns Feature at given location or None."""
-        for route in route_repository.list_routes():
-            if route.latitude == point.latitude and route.longitude == point.longitude:
-                return route
-        return None
 
     def get_distance(self, start, end):
         """Distance between two points."""
