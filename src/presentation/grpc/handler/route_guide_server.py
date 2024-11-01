@@ -19,6 +19,7 @@
 # Modified by MUCHIO on 2024-11-01
 # Changes: Export some codes into src/application/services/route_summarize_application_service.py
 # Changes: Implement Application Service
+# Changes: Add logging config and interceptors
 
 
 """The Python implementation of the gRPC route guide server."""
@@ -31,6 +32,7 @@ import grpc
 # sys.path.append('/Users/hn/Documents/dev/workspace_github/ddd-and-grpc-sample-in-python/src')
 from src.presentation.grpc.serializers.feature_serializer import FeatureSerializer
 from src.presentation.grpc.serializers.route_summary_serializer import RouteSummarySerializer
+from src.presentation.grpc.interceptors.logging_interceptor import LoggingInterceptor
 from src.auto_generated.grpc import route_guide_pb2
 from src.auto_generated.grpc import route_guide_pb2_grpc
 from src.infrastructure.database import Session
@@ -71,7 +73,7 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
 
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), interceptors=[LoggingInterceptor()])
     route_guide_pb2_grpc.add_RouteGuideServicer_to_server(
         RouteGuideServicer(), server
     )
@@ -81,5 +83,6 @@ def serve():
 
 
 if __name__ == "__main__":
-    logging.basicConfig()
+    logging.basicConfig(level=logging.DEBUG,
+            format='%(asctime)s - %(levelname)s - %(message)s')
     serve()
