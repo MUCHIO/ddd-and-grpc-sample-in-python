@@ -1,5 +1,5 @@
 from src.infrastructure.database import Session
-from typing import List, Optional
+from typing import Generator, Optional
 from src.infrastructure.database.repositories.route_repository import RouteRepository
 from src.application.dto.route_dto import RouteDTO
 
@@ -10,7 +10,7 @@ class FeatureApplicationService:
     def find_feature_by_point(self, latitude: int, longitude: int) -> Optional[RouteDTO]:
         return self.route_repository.find_route_by_point(latitude, longitude)
 
-    def find_feature_in_rectangle(self, left: int, right: int, top:int, bottom: int) -> List[RouteDTO]:
+    def find_feature_in_rectangle(self, left: int, right: int, top:int, bottom: int) -> Generator[RouteDTO, None, None]:
         for feature in self.route_repository.list_routes():
             if (
                 feature.longitude >= left
