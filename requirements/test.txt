@@ -1,3 +1,6 @@
 -r base.txt
 pytest
 pytest-mock
+grpcio-testing
+python-dotenv
+factory_boy

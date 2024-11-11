@@ -1,12 +1,6 @@
-import pytest
-from src.presentation.grpc.handler.route_guide_server import RouteGuideServicer
 from src.auto_generated.grpc import route_guide_pb2
 from src.application.services.feature_application_service import FeatureApplicationService
 from src.presentation.grpc.serializers.feature_serializer import FeatureSerializer
-
-@pytest.fixture
-def route_guide_server():
-    return RouteGuideServicer()
 
 def test_get_feature_found(mocker, route_guide_server):
     # Arrange

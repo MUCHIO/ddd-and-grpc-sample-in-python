@@ -14,18 +14,18 @@ class RouteRepository(IRouteRepository):
         self.session.add(db_route)
         self.session.commit()
         self.session.refresh(db_route)
-        return RouteModel.from_orm(db_route)
+        return RouteModel.model_validate(db_route)
 
     def find_route(self, route_id: int) -> Optional[RouteModel]:
         db_route = self.session.query(Route).filter(Route.id == route_id).first()
         if db_route:
-            return RouteModel.from_orm(db_route)
+            return RouteModel.model_validate(db_route)
         return None
 
     def find_route_by_point(self, latitude: int, longitude: int) -> RouteModel | None:
         db_route = self.session.query(Route).filter(Route.latitude == latitude, Route.longitude == longitude).first()
         if db_route:
-            return RouteModel.from_orm(db_route)
+            return RouteModel.model_validate(db_route)
         return None
 
     def update_route(self, route_id: int, updated_route: RouteModel) -> Optional[RouteModel]:
@@ -35,7 +35,7 @@ class RouteRepository(IRouteRepository):
                 setattr(db_route, key, value)
             self.session.commit()
             self.session.refresh(db_route)
-            return RouteModel.from_orm(db_route)
+            return RouteModel.model_validate(db_route)
         return None
 
     def delete_route(self, route_id: int) -> bool:
@@ -48,4 +48,4 @@ class RouteRepository(IRouteRepository):
 
     def list_routes(self) -> List[RouteModel]:
         db_routes = self.session.query(Route).all()
-        return [RouteModel.from_orm(route) for route in db_routes]
+        return [RouteModel.model_validate(route) for route in db_routes]
