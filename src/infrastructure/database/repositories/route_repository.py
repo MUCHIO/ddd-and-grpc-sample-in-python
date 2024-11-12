@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from src.infrastructure.database.schemas.route import Route
 from src.domain.entities.route import RouteModel
 from src.domain.repository_interfaces.route_repository_interface import IRouteRepository
-
+from src.infrastructure.database import session_scope
 
 class RouteRepository(IRouteRepository):
     def __init__(self, session: Session):

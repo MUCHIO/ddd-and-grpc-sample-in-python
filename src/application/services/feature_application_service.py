@@ -1,11 +1,12 @@
-from src.infrastructure.database import Session
 from typing import Generator, Optional
 from src.infrastructure.database.repositories.route_repository import RouteRepository
 from src.application.dto.route_dto import RouteDTO
+from src.infrastructure.database import session_scope
+from sqlalchemy.orm import Session
 
 class FeatureApplicationService:
-    def __init__(self):
-        self.route_repository = RouteRepository(Session())
+    def __init__(self, session: Session):
+        self.route_repository = RouteRepository(session)
 
     def find_feature_by_point(self, latitude: int, longitude: int) -> Optional[RouteDTO]:
         return self.route_repository.find_route_by_point(latitude, longitude)

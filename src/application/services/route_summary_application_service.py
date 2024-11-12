@@ -18,13 +18,14 @@
 
 import time, math
 from src.infrastructure.database.repositories.route_repository import RouteRepository
-from src.infrastructure.database import Session
 from src.auto_generated.grpc import route_guide_pb2
 from src.application.dto.route_summary_dto import RouteSummaryDTO
+from src.infrastructure.database import session_scope
+from sqlalchemy.orm import Session
 
 class RouteSummaryApplicationService:
-    def __init__(self):
-        self.route_repository = RouteRepository(Session())
+    def __init__(self, session: Session):
+        self.route_repository = RouteRepository(session)
 
     def summarize_route(self, request_iterator) -> route_guide_pb2.RouteSummary:
         point_count = 0

@@ -35,41 +35,45 @@ from src.presentation.grpc.serializers.route_summary_serializer import RouteSumm
 from src.presentation.grpc.interceptors.logging_interceptor import LoggingInterceptor
 from src.auto_generated.grpc import route_guide_pb2
 from src.auto_generated.grpc import route_guide_pb2_grpc
-from src.infrastructure.database import Session
 from src.infrastructure.database.repositories.route_repository import RouteRepository
 from src.application.services.route_summary_application_service import RouteSummaryApplicationService
 from src.application.services.feature_application_service import FeatureApplicationService
+from src.infrastructure.database import session_scope
 
 class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
     """Provides methods that implement functionality of route guide server."""
 
     def GetFeature(self, request, context):
-        feature = FeatureApplicationService().find_feature_by_point(request.latitude, request.longitude)
-        if feature is None:
-            return route_guide_pb2.Feature(name="", location=request)
-        else:
-            return FeatureSerializer.to_proto(feature)
+        with session_scope() as session:
+            feature = FeatureApplicationService(session).find_feature_by_point(request.latitude, request.longitude)
+            if feature is None:
+                return route_guide_pb2.Feature(name="", location=request)
+            else:
+                return FeatureSerializer.to_proto(feature)
 
     def ListFeatures(self, request, context):
-        left = min(request.lo.longitude, request.hi.longitude)
-        right = max(request.lo.longitude, request.hi.longitude)
-        top = max(request.lo.latitude, request.hi.latitude)
-        bottom = min(request.lo.latitude, request.hi.latitude)
-        for feature in FeatureApplicationService().find_feature_in_rectangle(left, right, top, bottom):
-            yield FeatureSerializer().to_proto(feature)
+        with session_scope() as session:
+            left = min(request.lo.longitude, request.hi.longitude)
+            right = max(request.lo.longitude, request.hi.longitude)
+            top = max(request.lo.latitude, request.hi.latitude)
+            bottom = min(request.lo.latitude, request.hi.latitude)
+            for feature in FeatureApplicationService(session).find_feature_in_rectangle(left, right, top, bottom):
+                yield FeatureSerializer().to_proto(feature)
 
     def RecordRoute(self, request_iterator, context):
-        route_summary = RouteSummaryApplicationService().summarize_route(request_iterator)
-        return RouteSummarySerializer().to_proto(route_summary)
+        with session_scope() as session:
+            route_summary = RouteSummaryApplicationService(session).summarize_route(request_iterator)
+            return RouteSummarySerializer().to_proto(route_summary)
 
     def RouteChat(self, request_iterator, context):
-        self.route_repository = RouteRepository(Session())
-        prev_notes = []
-        for new_note in request_iterator:
-            for prev_note in prev_notes:
-                if prev_note.location == new_note.location:
-                    yield prev_note
-            prev_notes.append(new_note)
+        with session_scope() as session:
+            self.route_repository = RouteRepository(session)
+            prev_notes = []
+            for new_note in request_iterator:
+                for prev_note in prev_notes:
+                    if prev_note.location == new_note.location:
+                        yield prev_note
+                prev_notes.append(new_note)
 
 
 def serve():
