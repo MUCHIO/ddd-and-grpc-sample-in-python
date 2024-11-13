@@ -4,9 +4,11 @@ from config.config import settings
 from contextlib import contextmanager
 from sqlalchemy.orm import scoped_session
 
+engine = create_engine(settings.database_url)
+
 @contextmanager
 def session_scope():
-    session = scoped_session(sessionmaker(create_engine(settings.database_url)))
+    session = scoped_session(sessionmaker(engine))
     try:
         yield session
         session.commit()
