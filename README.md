@@ -21,10 +21,26 @@ pytest
 ```
 
 ## Run the ruby client for test(Ruby 2.7.8 is required.)
+### One-time test
 ```
 cd tests/load
 bundle install
-ruby route_guide_client.rb ../../src/infrastructure/database/data/route_guide_db.json
+ruby -r ./route_guide_client.rb -e "main '../../src/infrastructure/database/data/route_guide_db.json'"
+```
+### Load test
+```
+cd tests/load
+bundle install
+ruby load_test_route_guide.rb
+```
+
+Outputs
+```
+    user     system      total        real
+...
+...
+...
+5.504243  10.177457  15.681700 ( 32.631951)
 ```
 
 ## The fllowing files are licensed under Apache-2.0

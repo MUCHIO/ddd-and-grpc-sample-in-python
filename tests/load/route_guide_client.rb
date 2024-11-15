@@ -20,6 +20,8 @@
 
 # Modified by MUCHIO on 2024-11-14
 # Changes: lib_dir path and dir name
+# Modified by MUCHIO on 2024-11-15
+# Changes: comment main
 
 this_dir = File.expand_path(File.dirname(__FILE__))
 lib_dir = File.join(this_dir, 'library')
@@ -148,20 +150,18 @@ class SleepingEnumerator
   end
 end
 
-def main
+def main(json = nil)
   stub = RouteGuide::Stub.new('localhost:50051', :this_channel_is_insecure)
   run_get_feature(stub)
   run_list_features(stub)
   run_route_chat(stub)
-  if ARGV.length == 0
+  unless json
     p 'no feature database; skipping record_route'
     exit
   end
   raw_data = []
-  File.open(ARGV[0]) do |f|
+  File.open(json) do |f|
     raw_data = MultiJson.load(f.read)
   end
   run_record_route(stub, raw_data)
 end
-
-main
