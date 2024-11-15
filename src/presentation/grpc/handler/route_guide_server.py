@@ -28,8 +28,6 @@ from concurrent import futures
 import logging
 
 import grpc
-# import sys
-# sys.path.append('/Users/hn/Documents/dev/workspace_github/ddd-and-grpc-sample-in-python/src')
 from src.presentation.grpc.serializers.feature_serializer import FeatureSerializer
 from src.presentation.grpc.serializers.route_summary_serializer import RouteSummarySerializer
 from src.presentation.grpc.interceptors.logging_interceptor import LoggingInterceptor

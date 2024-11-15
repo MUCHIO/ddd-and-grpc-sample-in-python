@@ -1,11 +1,33 @@
 # ddd-and-grpc-sample-in-python
 
-Start up the server
+## Set up the environment
+1. Install Python
+1. Install Mysql
+1. Create database on Mysql
+1. Copy .env.sample to .env and set values
+1. Run `pip install --no-cache-dir -r requirements/base.txt`
+1. Run `alembic upgrade head`
+
+## Start up the server
 ```
+export PYTHONPATH=.
 python -m src.presentation.grpc.handler.route_guide_server
 ```
 
-## Those files are licensed on Apache-2.0
+## Run pytest
+```
+pip install --no-cache-dir -r requirements/test.txt
+pytest
+```
+
+## Run the ruby client for test(Ruby 2.7.8 is required.)
+```
+cd tests/load
+bundle install
+ruby route_guide_client.rb ../../src/infrastructure/database/data/route_guide_db.json
+```
+
+## The fllowing files are licensed under Apache-2.0
 auth_sample.proto  
 hellostreamingworld.proto  
 helloworld.proto  
@@ -13,6 +35,9 @@ keyvaluestore.proto
 route_guide.proto  
 route_guide_resources.py  
 route_guide_server.py  
-route_guide_db.json
+route_guide_db.json  
+route_guide_client.rb  
+route_guide_pb.rb  
+route_guide_services_pb.rb
 
 Impoted from [grpc/grpc](https://github.com/grpc/grpc) repository.
