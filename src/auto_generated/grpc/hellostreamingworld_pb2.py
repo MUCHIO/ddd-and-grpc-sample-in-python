@@ -24,18 +24,18 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19hellostreamingworld.proto\x12\x13hellostreamingworld\"3\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x15\n\rnum_greetings\x18\x02 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t2b\n\x0cMultiGreeter\x12R\n\x08sayHello\x12!.hellostreamingworld.HelloRequest\x1a\x1f.hellostreamingworld.HelloReply\"\x00\x30\x01\x42\x0f\n\x07\x65x.grpc\xa2\x02\x03HSWb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19hellostreamingworld.proto\x12\x13hellostreamingworld\"G\n\x0cHelloRequest\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12#\n\rnum_greetings\x18\x02 \x01(\tR\x0cnumGreetings\"&\n\nHelloReply\x12\x18\n\x07message\x18\x01 \x01(\tR\x07message2b\n\x0cMultiGreeter\x12R\n\x08sayHello\x12!.hellostreamingworld.HelloRequest\x1a\x1f.hellostreamingworld.HelloReply\"\x00\x30\x01\x42\x9f\x01\n\x17\x63om.hellostreamingworldB\x18HellostreamingworldProtoP\x01\xa2\x02\x03HXX\xaa\x02\x13Hellostreamingworld\xca\x02\x13Hellostreamingworld\xe2\x02\x1fHellostreamingworld\\GPBMetadata\xea\x02\x13Hellostreamingworldb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hellostreamingworld_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'\n\007ex.grpc\242\002\003HSW'
+  _globals['DESCRIPTOR']._serialized_options = b'\n\027com.hellostreamingworldB\030HellostreamingworldProtoP\001\242\002\003HXX\252\002\023Hellostreamingworld\312\002\023Hellostreamingworld\342\002\037Hellostreamingworld\\GPBMetadata\352\002\023Hellostreamingworld'
   _globals['_HELLOREQUEST']._serialized_start=50
-  _globals['_HELLOREQUEST']._serialized_end=101
-  _globals['_HELLOREPLY']._serialized_start=103
-  _globals['_HELLOREPLY']._serialized_end=132
-  _globals['_MULTIGREETER']._serialized_start=134
-  _globals['_MULTIGREETER']._serialized_end=232
+  _globals['_HELLOREQUEST']._serialized_end=121
+  _globals['_HELLOREPLY']._serialized_start=123
+  _globals['_HELLOREPLY']._serialized_end=161
+  _globals['_MULTIGREETER']._serialized_start=163
+  _globals['_MULTIGREETER']._serialized_end=261
 # @@protoc_insertion_point(module_scope)

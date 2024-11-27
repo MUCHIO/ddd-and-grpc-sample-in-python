@@ -43,6 +43,11 @@ Outputs
 5.504243  10.177457  15.681700 ( 32.631951)
 ```
 
+## Update auto generated grpc files([Buf CLI](https://buf.build/docs/installation/) is required.)
+```
+buf generate
+```
+
 ## The fllowing files are licensed under Apache-2.0
 auth_sample.proto  
 hellostreamingworld.proto  

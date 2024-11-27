@@ -24,17 +24,18 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13keyvaluestore.proto\x12\rkeyvaluestore\"\x16\n\x07Request\x12\x0b\n\x03key\x18\x01 \x01(\t\"\x19\n\x08Response\x12\r\n\x05value\x18\x01 \x01(\t2S\n\rKeyValueStore\x12\x42\n\tGetValues\x12\x16.keyvaluestore.Request\x1a\x17.keyvaluestore.Response\"\x00(\x01\x30\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13keyvaluestore.proto\x12\rkeyvaluestore\"\x1b\n\x07Request\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\" \n\x08Response\x12\x14\n\x05value\x18\x01 \x01(\tR\x05value2S\n\rKeyValueStore\x12\x42\n\tGetValues\x12\x16.keyvaluestore.Request\x1a\x17.keyvaluestore.Response\"\x00(\x01\x30\x01\x42{\n\x11\x63om.keyvaluestoreB\x12KeyvaluestoreProtoP\x01\xa2\x02\x03KXX\xaa\x02\rKeyvaluestore\xca\x02\rKeyvaluestore\xe2\x02\x19Keyvaluestore\\GPBMetadata\xea\x02\rKeyvaluestoreb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'keyvaluestore_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
-  DESCRIPTOR._loaded_options = None
+  _globals['DESCRIPTOR']._loaded_options = None
+  _globals['DESCRIPTOR']._serialized_options = b'\n\021com.keyvaluestoreB\022KeyvaluestoreProtoP\001\242\002\003KXX\252\002\rKeyvaluestore\312\002\rKeyvaluestore\342\002\031Keyvaluestore\\GPBMetadata\352\002\rKeyvaluestore'
   _globals['_REQUEST']._serialized_start=38
-  _globals['_REQUEST']._serialized_end=60
-  _globals['_RESPONSE']._serialized_start=62
-  _globals['_RESPONSE']._serialized_end=87
-  _globals['_KEYVALUESTORE']._serialized_start=89
-  _globals['_KEYVALUESTORE']._serialized_end=172
+  _globals['_REQUEST']._serialized_end=65
+  _globals['_RESPONSE']._serialized_start=67
+  _globals['_RESPONSE']._serialized_end=99
+  _globals['_KEYVALUESTORE']._serialized_start=101
+  _globals['_KEYVALUESTORE']._serialized_end=184
 # @@protoc_insertion_point(module_scope)

@@ -24,18 +24,18 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10helloworld.proto\x12\nhelloworld\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t2\xe4\x01\n\x07Greeter\x12>\n\x08SayHello\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\"\x00\x12K\n\x13SayHelloStreamReply\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\"\x00\x30\x01\x12L\n\x12SayHelloBidiStream\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\"\x00(\x01\x30\x01\x42\x36\n\x1bio.grpc.examples.helloworldB\x0fHelloWorldProtoP\x01\xa2\x02\x03HLWb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10helloworld.proto\x12\nhelloworld\"\"\n\x0cHelloRequest\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\"&\n\nHelloReply\x12\x18\n\x07message\x18\x01 \x01(\tR\x07message2\xe4\x01\n\x07Greeter\x12>\n\x08SayHello\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\"\x00\x12K\n\x13SayHelloStreamReply\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\"\x00\x30\x01\x12L\n\x12SayHelloBidiStream\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\"\x00(\x01\x30\x01\x42i\n\x0e\x63om.helloworldB\x0fHelloworldProtoP\x01\xa2\x02\x03HXX\xaa\x02\nHelloworld\xca\x02\nHelloworld\xe2\x02\x16Helloworld\\GPBMetadata\xea\x02\nHelloworldb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'helloworld_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'\n\033io.grpc.examples.helloworldB\017HelloWorldProtoP\001\242\002\003HLW'
+  _globals['DESCRIPTOR']._serialized_options = b'\n\016com.helloworldB\017HelloworldProtoP\001\242\002\003HXX\252\002\nHelloworld\312\002\nHelloworld\342\002\026Helloworld\\GPBMetadata\352\002\nHelloworld'
   _globals['_HELLOREQUEST']._serialized_start=32
-  _globals['_HELLOREQUEST']._serialized_end=60
-  _globals['_HELLOREPLY']._serialized_start=62
-  _globals['_HELLOREPLY']._serialized_end=91
-  _globals['_GREETER']._serialized_start=94
-  _globals['_GREETER']._serialized_end=322
+  _globals['_HELLOREQUEST']._serialized_end=66
+  _globals['_HELLOREPLY']._serialized_start=68
+  _globals['_HELLOREPLY']._serialized_end=106
+  _globals['_GREETER']._serialized_start=109
+  _globals['_GREETER']._serialized_end=337
 # @@protoc_insertion_point(module_scope)
