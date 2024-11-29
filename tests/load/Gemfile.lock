@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    dotenv (2.8.1)
     google-protobuf (3.25.5)
     googleapis-common-protos-types (1.16.0)
       google-protobuf (>= 3.18, < 5.a)
@@ -8,14 +9,17 @@ GEM
       google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
     grpc-tools (1.67.0)
+    multi_json (1.15.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  dotenv
   google-protobuf (= 3.25.5)
   grpc (= 1.65.2)
   grpc-tools
+  multi_json
 
 RUBY VERSION
    ruby 2.7.8p225

@@ -1,0 +1,71 @@
+services:
+  db:
+    image: mysql:8.0.28
+    platform: linux/amd64
+    env_file:
+      - .env.docker
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db-docker.sql:/docker-entrypoint-initdb.d/init-db-docker.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  grpc_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.docker
+    ports:
+      - "50051:50051"
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      [
+        "/bin/sh"
+        , "-c"
+        , "alembic upgrade head && python -m src.presentation.grpc.handler.route_guide_server"
+      ]
+
+  pytest:
+    profiles:
+      - test
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.docker
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["pytest", "--maxfail=1", "--disable-warnings", "-v"]
+
+  ruby_client:
+    profiles:
+      - client
+    build:
+      context: .
+      dockerfile: Dockerfile_ruby
+    environment:
+      - GRPC_SERVER=grpc_server
+      - GRPC_PORT=50051
+    depends_on:
+      grpc_server:
+        condition: service_started
+      db:
+        condition: service_healthy
+    command:
+      - /bin/bash
+      - -c
+      - |
+        ruby -r "./route_guide_client.rb" -e "main '../../src/infrastructure/database/data/route_guide_db.json'"
+        ruby load_test_route_guide.rb
+
+volumes:
+  mysql_data:

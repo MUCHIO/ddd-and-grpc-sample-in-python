@@ -22,6 +22,8 @@
 # Changes: lib_dir path and dir name
 # Modified by MUCHIO on 2024-11-15
 # Changes: comment main
+# Modified by MUCHIO on 2024-11-29
+# Changes: Made grpc server host and port configurable
 
 this_dir = File.expand_path(File.dirname(__FILE__))
 lib_dir = File.join(this_dir, 'library')
@@ -30,6 +32,7 @@ $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require 'grpc'
 require 'multi_json'
 require 'route_guide_services_pb'
+require 'dotenv'
 
 include Routeguide
 
@@ -151,7 +154,9 @@ class SleepingEnumerator
 end
 
 def main(json = nil)
-  stub = RouteGuide::Stub.new('localhost:50051', :this_channel_is_insecure)
+  Dotenv.load '.env.ruby'
+
+  stub = RouteGuide::Stub.new("#{ENV['GRPC_SERVER']}:#{ENV['GRPC_PORT']}", :this_channel_is_insecure)
   run_get_feature(stub)
   run_list_features(stub)
   run_route_chat(stub)

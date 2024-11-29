@@ -1,0 +1,13 @@
+# ベースイメージとしてRuby 2.7.8を使用
+FROM ruby:2.7.8
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# 必要なファイルをコンテナにコピー
+COPY . .
+
+WORKDIR /app/tests/load
+
+# 依存関係をインストール
+RUN bundle install
