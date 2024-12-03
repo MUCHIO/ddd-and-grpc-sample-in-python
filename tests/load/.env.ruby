@@ -1,2 +1,3 @@
 GRPC_SERVER=localhost
 GRPC_PORT=50051
+SECRET_KEY=secret_key

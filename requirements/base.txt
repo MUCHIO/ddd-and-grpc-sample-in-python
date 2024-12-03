@@ -5,3 +5,4 @@ alembic
 mysqlclient
 pydantic
 pydantic-settings
+pyJWT

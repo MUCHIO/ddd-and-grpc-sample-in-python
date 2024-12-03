@@ -24,6 +24,8 @@
 # Changes: comment main
 # Modified by MUCHIO on 2024-11-29
 # Changes: Made grpc server host and port configurable
+# Modified by MUCHIO on 2024-12-03
+# Changes: Added JWT token generation
 
 this_dir = File.expand_path(File.dirname(__FILE__))
 lib_dir = File.join(this_dir, 'library')
@@ -33,6 +35,7 @@ require 'grpc'
 require 'multi_json'
 require 'route_guide_services_pb'
 require 'dotenv'
+require 'jwt'
 
 include Routeguide
 
@@ -41,20 +44,30 @@ GET_FEATURE_POINTS = [
   Point.new(latitude:  0, longitude: 0)
 ]
 
+# JWTトークンを生成
+def generate_jwt_token(user_id)
+  payload = { 'user_id' => user_id }
+  token = JWT.encode(payload, ENV['SECRET_KEY'], 'HS256')
+  token
+end
+
 # runs a GetFeature rpc.
 #
 # - once with a point known to be present in the sample route database
 # - once with a point that is not in the sample database
-def run_get_feature(stub)
+def run_get_feature(stub, metadata)
   p 'GetFeature'
   p '----------'
   GET_FEATURE_POINTS.each do |pt|
-    resp = stub.get_feature(pt)
+    resp = stub.get_feature(pt, metadata: metadata)
     if resp.name != ''
       p "- found '#{resp.name}' at #{pt.inspect}"
     else
       p "- found nothing at #{pt.inspect}"
     end
+    rescue GRPC::BadStatus => e
+      puts "エラーコード: #{e.code}"
+      puts "エラー詳細: #{e.details}"
   end
 end
 
@@ -66,10 +79,10 @@ LIST_FEATURES_RECT = Rectangle.new(
 #
 # - the rectangle to chosen to include most of the known features
 #   in the sample db.
-def run_list_features(stub)
+def run_list_features(stub, metadata)
   p 'ListFeatures'
   p '------------'
-  resps = stub.list_features(LIST_FEATURES_RECT)
+  resps = stub.list_features(LIST_FEATURES_RECT, metadata: metadata)
   resps.each do |r|
     p "- found '#{r.name}' at #{r.location.inspect}"
   end
@@ -105,12 +118,12 @@ end
 #
 # - the rectangle to chosen to include most of the known features
 #   in the sample db.
-def run_record_route(stub, features)
+def run_record_route(stub, features, metadata)
   p 'RecordRoute'
   p '-----------'
   points_on_route = 10  # arbitrary
   reqs = RandomRoute.new(features, points_on_route)
-  resp = stub.record_route(reqs.each)
+  resp = stub.record_route(reqs.each, metadata: metadata)
   p "summary: #{resp.inspect}"
 end
 
@@ -130,11 +143,11 @@ ROUTE_CHAT_NOTES = [
 # runs a RouteChat rpc.
 #
 # sends a canned set of route notes and prints out the responses.
-def run_route_chat(stub)
+def run_route_chat(stub, metadata)
   p 'Route Chat'
   p '----------'
   sleeping_enumerator = SleepingEnumerator.new(ROUTE_CHAT_NOTES, 1)
-  stub.route_chat(sleeping_enumerator.each_item) { |r| p "received #{r.inspect}" }
+  stub.route_chat(sleeping_enumerator.each_item, metadata: metadata) { |r| p "received #{r.inspect}" }
 end
 
 # SleepingEnumerator yields through items, and sleeps between each one
@@ -157,9 +170,11 @@ def main(json = nil)
   Dotenv.load '.env.ruby'
 
   stub = RouteGuide::Stub.new("#{ENV['GRPC_SERVER']}:#{ENV['GRPC_PORT']}", :this_channel_is_insecure)
-  run_get_feature(stub)
-  run_list_features(stub)
-  run_route_chat(stub)
+  token = generate_jwt_token('user123')
+  metadata = { 'authorization' => token, 'user_id' => 'user123' }
+  run_get_feature(stub, metadata)
+  run_list_features(stub, metadata)
+  run_route_chat(stub, metadata)
   unless json
     p 'no feature database; skipping record_route'
     exit
@@ -168,5 +183,5 @@ def main(json = nil)
   File.open(json) do |f|
     raw_data = MultiJson.load(f.read)
   end
-  run_record_route(stub, raw_data)
+  run_record_route(stub, raw_data, metadata)
 end

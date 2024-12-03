@@ -11,16 +11,16 @@ docker compose down && docker compose up --build -d
 ```
 ## Run pytest
 ```
-docker compose run pytest
+docker compose build && docker compose run pytest
 ```
 ## Run the ruby client for test
 ### One-time test
 ```
-docker compose run ruby_client ruby -r "./route_guide_client.rb" -e "main '../../src/infrastructure/database/data/route_guide_db.json'"
+docker compose build && docker compose run ruby_client ruby -r "./route_guide_client.rb" -e "main '../../src/infrastructure/database/data/route_guide_db.json'"
 ```
 ### Load test
 ```
-docker compose run ruby_client ruby load_test_route_guide.rb
+docker compose build && docker compose run ruby_client ruby load_test_route_guide.rb
 ```
 Outputs
 ```

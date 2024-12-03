@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     db_host: str
     db_port: str
     loaded_db_name: str = Field(..., alias='DB_NAME')
+    secret_key: str
 
     @property
     def db_name(self) -> str:

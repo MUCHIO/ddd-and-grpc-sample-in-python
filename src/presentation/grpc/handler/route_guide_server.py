@@ -20,17 +20,20 @@
 # Changes: Export some codes into src/application/services/route_summarize_application_service.py
 # Changes: Implement Application Service
 # Changes: Add logging config and interceptors
+# Modified by MUCHIO on 2024-12-03
+# Changes: Add JwtInterceptor and logger
 
 
 """The Python implementation of the gRPC route guide server."""
 
 from concurrent import futures
-import logging
+from logging import getLogger, FileHandler, DEBUG, Formatter
 
 import grpc
 from src.presentation.grpc.serializers.feature_serializer import FeatureSerializer
 from src.presentation.grpc.serializers.route_summary_serializer import RouteSummarySerializer
 from src.presentation.grpc.interceptors.logging_interceptor import LoggingInterceptor
+from src.presentation.grpc.interceptors.jwt_Interceptor import JwtInterceptor
 from src.auto_generated.grpc import route_guide_pb2
 from src.auto_generated.grpc import route_guide_pb2_grpc
 from src.infrastructure.database.repositories.route_repository import RouteRepository
@@ -38,10 +41,25 @@ from src.application.services.route_summary_application_service import RouteSumm
 from src.application.services.feature_application_service import FeatureApplicationService
 from src.infrastructure.database import session_scope
 
+logger = getLogger(__name__)
+logger.setLevel(DEBUG)
+handler = FileHandler('grpc_server.log')
+handler.setLevel(DEBUG)
+formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+logger.propagate = False
+
 class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
     """Provides methods that implement functionality of route guide server."""
 
     def GetFeature(self, request, context):
+        # メタデータからuser_idを取得
+        metadata = dict(context.invocation_metadata())
+        user_id = metadata.get('user_id')
+        if user_id:
+            logger.debug(f"User ID: {user_id}")
+
         with session_scope() as session:
             feature = FeatureApplicationService(session).find_feature_by_point(request.latitude, request.longitude)
             if feature is None:
@@ -75,7 +93,7 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
 
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), interceptors=[LoggingInterceptor()])
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), interceptors=[LoggingInterceptor(), JwtInterceptor()])
     route_guide_pb2_grpc.add_RouteGuideServicer_to_server(
         RouteGuideServicer(), server
     )
@@ -85,6 +103,4 @@ def serve():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG,
-            format='%(asctime)s - %(levelname)s - %(message)s')
     serve()
