@@ -47,7 +47,7 @@ jobs:
 
     - name: Run tests
       env:
-        PYTHONPATH: .
+        PYTHONPATH: .:src/auto_generated/grpc
         DB_DRIVER: mysql
         DB_USER: root
         DB_PASSWORD: root
