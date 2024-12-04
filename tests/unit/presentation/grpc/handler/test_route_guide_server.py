@@ -11,8 +11,12 @@ def test_get_feature_found(mocker, route_guide_server):
     mocker.patch.object(FeatureApplicationService, 'find_feature_by_point', return_value=route_dto_mock)
     mocker.patch.object(FeatureSerializer, 'to_proto', return_value=route_guide_pb2.Feature(name=route_dto_mock.name, location=request))
 
+    # Create a mock context with invocation_metadata method
+    context = mocker.Mock()
+    context.invocation_metadata.return_value = []
+
     # Act
-    response = route_guide_server.GetFeature(request, None)
+    response = route_guide_server.GetFeature(request, context)
 
     # Assert
     assert response.name == name
@@ -24,8 +28,12 @@ def test_get_feature_not_found(mocker, route_guide_server):
     request = route_guide_pb2.Point(latitude=409146138, longitude=-746188906)
     mocker.patch.object(FeatureApplicationService, 'find_feature_by_point', return_value=None)
 
+    # Create a mock context with invocation_metadata method
+    context = mocker.Mock()
+    context.invocation_metadata.return_value = []
+
     # Act
-    response = route_guide_server.GetFeature(request, None)
+    response = route_guide_server.GetFeature(request, context)
 
     # Assert
     assert response.name == ''
