@@ -163,6 +163,7 @@ cython_debug/
 
 # Ruby
 .byebug_history
+tests/load/vendor
 
 # VSCode
 .vscode

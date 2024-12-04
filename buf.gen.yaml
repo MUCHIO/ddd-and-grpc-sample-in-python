@@ -2,11 +2,18 @@ version: v2
 managed:
   enabled: true
 plugins:
+  # python
   - remote: buf.build/grpc/python:v1.67.0
     out: src/auto_generated/grpc
   # dependencies
   - remote: buf.build/protocolbuffers/python:v27.2
     out: src/auto_generated/grpc
+  # ruby test
+  - remote: buf.build/grpc/ruby:v1.67.0
+    out: tests/load/library
+  # dependencies
+  - remote: buf.build/protocolbuffers/ruby:v27.2
+    out: tests/load/library
 inputs:
   - git_repo: https://github.com/grpc/grpc
     tag: v1.68.0
