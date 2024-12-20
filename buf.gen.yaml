@@ -18,3 +18,7 @@ inputs:
   - git_repo: https://github.com/grpc/grpc
     tag: v1.68.0
     subdir: examples/protos
+  - module: buf.build/googleapis/googleapis:e93e34f48be043dab55be31b4b47f458
+    paths:
+      - google/rpc
+  - directory: protos

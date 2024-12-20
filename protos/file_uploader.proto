@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package mypackage;
+
+import "google/rpc/status.proto";
+
+service FileUploader {
+  rpc SendFile (FileData) returns (google.rpc.Status);
+}
+
+message FileData {
+  bytes data = 1;
+}
