@@ -14,10 +14,15 @@ docker compose down && docker compose up --build -d
 docker compose build && docker compose run pytest
 ```
 ## Run the ruby client for test
-### One-time test
+### One-time test(API execution)
 ```
 docker compose build ruby_client && docker compose run ruby_client ruby -r "./route_guide_client.rb" -e "main '../../src/infrastructure/database/data/route_guide_db.json'"
 ```
+### One-time test(File upload)
+```
+docker compose build ruby_client && docker compose run ruby_client ruby -r "./file_uploader_client.rb" -e "main '../../src/infrastructure/database/data/route_guide_db.json'"
+```
+
 ### Load test
 ```
 docker compose build ruby_client && docker compose run ruby_client ruby load_test_route_guide.rb
@@ -43,7 +48,7 @@ Outputs
 ## Start up grpc server
 ```
 export PYTHONPATH=.:src/auto_generated/grpc
-python -m src.presentation.grpc.handler.route_guide_server
+python -m src.presentation.grpc.handler.server
 ```
 
 ## Run pytest

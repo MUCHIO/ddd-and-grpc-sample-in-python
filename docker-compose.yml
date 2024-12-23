@@ -30,7 +30,7 @@ services:
       [
         "/bin/sh"
         , "-c"
-        , "alembic upgrade head && python -m src.presentation.grpc.handler.route_guide_server"
+        , "alembic upgrade head && python -m src.presentation.grpc.handler.server"
       ]
 
   pytest:
