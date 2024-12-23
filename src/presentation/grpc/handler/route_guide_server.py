@@ -26,14 +26,11 @@
 
 """The Python implementation of the gRPC route guide server."""
 
-from concurrent import futures
 from logging import getLogger, FileHandler, DEBUG, Formatter
 
 import grpc
 from src.presentation.grpc.serializers.feature_serializer import FeatureSerializer
 from src.presentation.grpc.serializers.route_summary_serializer import RouteSummarySerializer
-from src.presentation.grpc.interceptors.logging_interceptor import LoggingInterceptor
-from src.presentation.grpc.interceptors.jwt_Interceptor import JwtInterceptor
 from src.auto_generated.grpc import route_guide_pb2
 from src.auto_generated.grpc import route_guide_pb2_grpc
 from src.infrastructure.database.repositories.route_repository import RouteRepository
@@ -90,17 +87,3 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
                     if prev_note.location == new_note.location:
                         yield prev_note
                 prev_notes.append(new_note)
-
-
-def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), interceptors=[LoggingInterceptor(), JwtInterceptor()])
-    route_guide_pb2_grpc.add_RouteGuideServicer_to_server(
-        RouteGuideServicer(), server
-    )
-    server.add_insecure_port("[::]:50051")
-    server.start()
-    server.wait_for_termination()
-
-
-if __name__ == "__main__":
-    serve()
