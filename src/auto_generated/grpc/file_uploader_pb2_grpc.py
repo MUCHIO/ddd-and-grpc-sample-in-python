@@ -16,7 +16,7 @@ class FileUploaderStub(object):
             channel: A grpc.Channel.
         """
         self.SendFile = channel.unary_unary(
-                '/mypackage.FileUploader/SendFile',
+                '/fileuploader.FileUploader/SendFile',
                 request_serializer=file__uploader__pb2.FileData.SerializeToString,
                 response_deserializer=google_dot_rpc_dot_status__pb2.Status.FromString,
                 _registered_method=True)
@@ -41,9 +41,9 @@ def add_FileUploaderServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'mypackage.FileUploader', rpc_method_handlers)
+            'fileuploader.FileUploader', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('mypackage.FileUploader', rpc_method_handlers)
+    server.add_registered_method_handlers('fileuploader.FileUploader', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -64,7 +64,7 @@ class FileUploader(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/mypackage.FileUploader/SendFile',
+            '/fileuploader.FileUploader/SendFile',
             file__uploader__pb2.FileData.SerializeToString,
             google_dot_rpc_dot_status__pb2.Status.FromString,
             options,

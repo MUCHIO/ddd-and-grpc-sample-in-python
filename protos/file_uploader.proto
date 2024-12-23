@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package mypackage;
+package fileuploader;
 
 import "google/rpc/status.proto";
 
