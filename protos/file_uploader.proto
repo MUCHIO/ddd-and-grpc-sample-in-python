@@ -9,5 +9,6 @@ service FileUploader {
 }
 
 message FileData {
-  bytes data = 1;
+  repeated bytes liked_song_feature_vectors = 1;
+  repeated bytes disliked_song_feature_vectors = 2;
 }

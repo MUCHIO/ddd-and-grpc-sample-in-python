@@ -14,9 +14,12 @@ logger.propagate = False
 class FileUploader(file_uploader_pb2_grpc.FileUploaderServicer):
     def SendFile(self, request, context):
         try:
-            file_data = request.data
-            with open('uploaded_file', 'wb') as f:
-                logger.debug(file_data)
+            for liked_song_feature_vector in request.liked_song_feature_vectors:
+                with open('uploaded_file', 'wb') as f:
+                    logger.debug(liked_song_feature_vector)
+            for disliked_song_feature_vector in request.disliked_song_feature_vectors:
+                with open('uploaded_file', 'wb') as f:
+                    logger.debug(disliked_song_feature_vector)
             return status_pb2.Status(code=0, message="Success")
         except Exception as e:
             return status_pb2.Status(code=1, message=str(e))

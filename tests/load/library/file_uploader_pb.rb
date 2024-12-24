@@ -7,7 +7,7 @@ require 'google/protobuf'
 require 'google/rpc/status_pb'
 
 
-descriptor_data = "\n\x13\x66ile_uploader.proto\x12\x0c\x66ileuploader\x1a\x17google/rpc/status.proto\"\x1e\n\x08\x46ileData\x12\x12\n\x04\x64\x61ta\x18\x01 \x01(\x0cR\x04\x64\x61ta2F\n\x0c\x46ileUploader\x12\x36\n\x08SendFile\x12\x16.fileuploader.FileData\x1a\x12.google.rpc.StatusBu\n\x10\x63om.fileuploaderB\x11\x46ileUploaderProtoP\x01\xa2\x02\x03\x46XX\xaa\x02\x0c\x46ileuploader\xca\x02\x0c\x46ileuploader\xe2\x02\x18\x46ileuploader\\GPBMetadata\xea\x02\x0c\x46ileuploaderb\x06proto3"
+descriptor_data = "\n\x13\x66ile_uploader.proto\x12\x0c\x66ileuploader\x1a\x17google/rpc/status.proto\"\x8a\x01\n\x08\x46ileData\x12;\n\x1aliked_song_feature_vectors\x18\x01 \x03(\x0cR\x17likedSongFeatureVectors\x12\x41\n\x1d\x64isliked_song_feature_vectors\x18\x02 \x03(\x0cR\x1a\x64islikedSongFeatureVectors2F\n\x0c\x46ileUploader\x12\x36\n\x08SendFile\x12\x16.fileuploader.FileData\x1a\x12.google.rpc.StatusBu\n\x10\x63om.fileuploaderB\x11\x46ileUploaderProtoP\x01\xa2\x02\x03\x46XX\xaa\x02\x0c\x46ileuploader\xca\x02\x0c\x46ileuploader\xe2\x02\x18\x46ileuploader\\GPBMetadata\xea\x02\x0c\x46ileuploaderb\x06proto3"
 
 pool = Google::Protobuf::DescriptorPool.generated_pool
 pool.add_serialized_file(descriptor_data)

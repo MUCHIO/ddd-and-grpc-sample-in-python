@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from google.rpc import status_pb2 as google_dot_rpc_dot_status__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13\x66ile_uploader.proto\x12\x0c\x66ileuploader\x1a\x17google/rpc/status.proto\"\x1e\n\x08\x46ileData\x12\x12\n\x04\x64\x61ta\x18\x01 \x01(\x0cR\x04\x64\x61ta2F\n\x0c\x46ileUploader\x12\x36\n\x08SendFile\x12\x16.fileuploader.FileData\x1a\x12.google.rpc.StatusBu\n\x10\x63om.fileuploaderB\x11\x46ileUploaderProtoP\x01\xa2\x02\x03\x46XX\xaa\x02\x0c\x46ileuploader\xca\x02\x0c\x46ileuploader\xe2\x02\x18\x46ileuploader\\GPBMetadata\xea\x02\x0c\x46ileuploaderb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13\x66ile_uploader.proto\x12\x0c\x66ileuploader\x1a\x17google/rpc/status.proto\"\x8a\x01\n\x08\x46ileData\x12;\n\x1aliked_song_feature_vectors\x18\x01 \x03(\x0cR\x17likedSongFeatureVectors\x12\x41\n\x1d\x64isliked_song_feature_vectors\x18\x02 \x03(\x0cR\x1a\x64islikedSongFeatureVectors2F\n\x0c\x46ileUploader\x12\x36\n\x08SendFile\x12\x16.fileuploader.FileData\x1a\x12.google.rpc.StatusBu\n\x10\x63om.fileuploaderB\x11\x46ileUploaderProtoP\x01\xa2\x02\x03\x46XX\xaa\x02\x0c\x46ileuploader\xca\x02\x0c\x46ileuploader\xe2\x02\x18\x46ileuploader\\GPBMetadata\xea\x02\x0c\x46ileuploaderb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,8 +33,8 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'file_uploader_pb2', _global
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n\020com.fileuploaderB\021FileUploaderProtoP\001\242\002\003FXX\252\002\014Fileuploader\312\002\014Fileuploader\342\002\030Fileuploader\\GPBMetadata\352\002\014Fileuploader'
-  _globals['_FILEDATA']._serialized_start=62
-  _globals['_FILEDATA']._serialized_end=92
-  _globals['_FILEUPLOADER']._serialized_start=94
-  _globals['_FILEUPLOADER']._serialized_end=164
+  _globals['_FILEDATA']._serialized_start=63
+  _globals['_FILEDATA']._serialized_end=201
+  _globals['_FILEUPLOADER']._serialized_start=203
+  _globals['_FILEUPLOADER']._serialized_end=273
 # @@protoc_insertion_point(module_scope)
