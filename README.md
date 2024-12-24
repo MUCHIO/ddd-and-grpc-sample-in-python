@@ -20,7 +20,7 @@ docker compose build ruby_client && docker compose run ruby_client ruby -r "./ro
 ```
 ### One-time test(File upload)
 ```
-docker compose build ruby_client && docker compose run ruby_client ruby -r "./file_uploader_client.rb" -e "main '../../src/infrastructure/database/data/route_guide_db.json'"
+docker compose build ruby_client && docker compose run ruby_client ruby -r "./file_uploader_client.rb" -e "main '../../src/infrastructure/database/data/route_guide_db.json', '../../src/infrastructure/database/data/route_guide_db.json', '../../src/infrastructure/database/data/route_guide_db.json', '../../src/infrastructure/database/data/route_guide_db.json', '../../src/infrastructure/database/data/route_guide_db.json', '../../src/infrastructure/database/data/route_guide_db.json'"
 ```
 
 ### Load test
