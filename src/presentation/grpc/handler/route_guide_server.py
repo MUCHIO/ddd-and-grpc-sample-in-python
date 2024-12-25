@@ -37,6 +37,7 @@ from src.infrastructure.database.repositories.route_repository import RouteRepos
 from src.application.services.route_summary_application_service import RouteSummaryApplicationService
 from src.application.services.feature_application_service import FeatureApplicationService
 from src.infrastructure.database import session_scope
+from config.config import settings
 
 logger = getLogger(__name__)
 logger.setLevel(DEBUG)
@@ -50,6 +51,9 @@ logger.propagate = False
 class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
     """Provides methods that implement functionality of route guide server."""
 
+    def __init__(self, database_url):
+        self.database_url = database_url
+
     def GetFeature(self, request, context):
         # メタデータからuser_idを取得
         metadata = dict(context.invocation_metadata())
@@ -57,7 +61,7 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
         if user_id:
             logger.debug(f"User ID: {user_id}")
 
-        with session_scope() as session:
+        with session_scope(self.database_url) as session:
             feature = FeatureApplicationService(session).find_feature_by_point(request.latitude, request.longitude)
             if feature is None:
                 return route_guide_pb2.Feature(name="", location=request)
@@ -65,7 +69,7 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
                 return FeatureSerializer.to_proto(feature)
 
     def ListFeatures(self, request, context):
-        with session_scope() as session:
+        with session_scope(self.database_url) as session:
             left = min(request.lo.longitude, request.hi.longitude)
             right = max(request.lo.longitude, request.hi.longitude)
             top = max(request.lo.latitude, request.hi.latitude)
@@ -74,12 +78,12 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
                 yield FeatureSerializer().to_proto(feature)
 
     def RecordRoute(self, request_iterator, context):
-        with session_scope() as session:
+        with session_scope(self.database_url) as session:
             route_summary = RouteSummaryApplicationService(session).summarize_route(request_iterator)
             return RouteSummarySerializer().to_proto(route_summary)
 
     def RouteChat(self, request_iterator, context):
-        with session_scope() as session:
+        with session_scope(self.database_url) as session:
             self.route_repository = RouteRepository(session)
             prev_notes = []
             for new_note in request_iterator:

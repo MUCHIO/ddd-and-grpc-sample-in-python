@@ -12,6 +12,10 @@ logger.addHandler(handler)
 logger.propagate = False
 
 class FileUploader(file_uploader_pb2_grpc.FileUploaderServicer):
+
+    def __init__(self, database_url):
+        self.database_url = database_url
+
     def SendFile(self, request, context):
         try:
             for liked_song_feature_vector in request.liked_song_feature_vectors:
